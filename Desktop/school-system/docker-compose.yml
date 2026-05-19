@@ -1,35 +1,21 @@
 version: '3.8'
 
 services:
-  # 1. MongoDB Database Container
-  mongodb:
-    image: mongo:latest
-    container_name: school-db-local
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongo-data:/data/db
-    restart: always
-
-  # 2. Backend Container
+  # 1. Backend Container (Direct MongoDB Atlas Cloud se connect hoga)
   app-backend:
     build: ./backend
     container_name: school-backend
     ports:
       - "5000:5000"
     environment:
-      - MONGO_URI=mongodb://mongodb:27017/schoolDB
-    depends_on:
-      - mongodb
-    restart: always  # Agar db ready na ho to backend crash hone ki bajaye khud restart ho jaye
+      # Hamein link ke andar database ka naam /schoolDB lazmi dena hota hai taake data sahi jagah jaye
+      - MONGO_URI=mongodb+srv://qasimjutt1416_db_user:<db_password>@schoolcluster.phnwpnu.mongodb.net/schoolDB?retryWrites=true&w=majority&appName=schoolcluster
+    restart: always
 
-  # 3. Frontend Container
+  # 2. Frontend Container
   app-frontend:
     build: ./frontend
     container_name: school-frontend
     ports:
       - "8080:80"
     restart: always
-
-volumes:
-  mongo-data:
