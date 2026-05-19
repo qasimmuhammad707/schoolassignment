@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  # 1. MongoDB Database Container (Pehle yeh chalega)
+  # 1. MongoDB Database Container
   mongodb:
     image: mongo:latest
     container_name: school-db-local
@@ -17,17 +17,16 @@ services:
     ports:
       - "5000:5000"
     environment:
-      # Is bar hum Atlas nahi, balki local container ka naam use karenge
       - MONGO_URI=mongodb://mongodb:27017/schoolDB
     depends_on:
       - mongodb
 
-  # 3. Frontend Container
+  # 3. Frontend Container (Port mapping fixed here)
   app-frontend:
     build: ./frontend
     container_name: school-frontend
     ports:
-      - "8080:8080"
+      - "8080:80"  # Bahar ka 8080 ab andar Nginx ke default port 80 par request bhejay ga
 
 volumes:
   mongo-data:
