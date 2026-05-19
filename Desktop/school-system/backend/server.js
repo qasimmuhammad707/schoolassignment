@@ -10,7 +10,8 @@ app.use(cors());
 // Agar pipeline se MONGO_URI milegi to woh chalegi, nahi to local backup chalega
 const mongoURI = process.env.MONGO_URI || 'mongodb://localhost:27017/schoolDB';
 
-mongoose.connect(mongoURI)
+// Is line ko bilkul line 13 ke sath replace karein:
+mongoose.connect(MONGO_URI)
   .then(() => console.log('MongoDB Connected Successfully!'))
   .catch(err => console.log('Database Connection Error: ', err));
 
