@@ -8,8 +8,8 @@ services:
     ports:
       - "5000:5000"
     environment:
-      # Hamein link ke andar database ka naam /schoolDB lazmi dena hota hai taake data sahi jagah jaye
-      - MONGO_URI=mongodb+srv://qasimjutt1416_db_user:<db_password>@schoolcluster.phnwpnu.mongodb.net/schoolDB?retryWrites=true&w=majority&appName=schoolcluster
+      # Hum ne password ki jagah seedha Qasim12345 likh diya hai
+      - MONGO_URI=mongodb+srv://qasimjutt1416_db_user:Qasim12345@schoolcluster.phnwpnu.mongodb.net/schoolDB?retryWrites=true&w=majority&appName=schoolcluster
     restart: always
 
   # 2. Frontend Container
