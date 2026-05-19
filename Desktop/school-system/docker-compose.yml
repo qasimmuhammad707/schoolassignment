@@ -9,6 +9,7 @@ services:
       - "27017:27017"
     volumes:
       - mongo-data:/data/db
+    restart: always
 
   # 2. Backend Container
   app-backend:
@@ -20,13 +21,15 @@ services:
       - MONGO_URI=mongodb://mongodb:27017/schoolDB
     depends_on:
       - mongodb
+    restart: always  # Agar db ready na ho to backend crash hone ki bajaye khud restart ho jaye
 
-  # 3. Frontend Container (Port mapping fixed here)
+  # 3. Frontend Container
   app-frontend:
     build: ./frontend
     container_name: school-frontend
     ports:
-      - "8080:80"  # Bahar ka 8080 ab andar Nginx ke default port 80 par request bhejay ga
+      - "8080:80"
+    restart: always
 
 volumes:
   mongo-data:
