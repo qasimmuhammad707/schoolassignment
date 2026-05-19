@@ -9,9 +9,10 @@ app.use(cors());
 // Docker Compose se connect karne ke liye dynamic URI
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/schoolDB';
 
-mongoose.connect(MONGO_URI)
-  .then(() => console.log('Connected to MongoDB successfully!'))
-  .catch(err => console.error('MongoDB Connection Error:', err));
+// server.js ke andar mongoose connection code ko is se replace karo:
+mongoose.connect('mongodb+srv://qasimjutt1416_db_user:972YlhpYiJYEtaH@schoolcluster.phnwpnu.mongodb.net/schoolDB?retryWrites=true&w=majority&appName=schoolcluster')
+  .then(() => console.log('MongoDB Atlas Connected Successfully!'))
+  .catch(err => console.log('Database Connection Error: ', err));
 
 // Student Schema aur Model (Database Table Structure)
 const StudentSchema = new mongoose.Schema({
