@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  database:
+    image: mongo:6.0
+    container_name: local-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-volume:/data/db
+    networks:
+      - school-net
+
+  backend:
+    build: ./backend
+    container_name: app-backend
+    ports:
+      - "5000:5000"
+    environment:
+      - MONGO_URI=mongodb://database:27017/schoolDB
+    depends_on:
+      - database
+    networks:
+      - school-net
+
+  frontend:
+    build: ./frontend
+    container_name: app-frontend
+    ports:
+       - "8080:80"
+    depends_on:
+      - backend
+    networks:
+      - school-net
+
+networks:
+  school-net:
+    driver: bridge
+
+volumes:
+  mongo-volume:
