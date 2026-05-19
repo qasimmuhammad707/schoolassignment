@@ -6,16 +6,15 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-// Docker Compose ya Local setup ke liye dynamic URI
-// Agar pipeline se MONGO_URI milegi to woh chalegi, nahi to local backup chalega
-const mongoURI = process.env.MONGO_URI || 'mongodb://localhost:27017/schoolDB';
+// Docker Compose se aane wali MONGO_URI uthao, nahi to backup local URL use karo
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/schoolDB';
 
-// Is line ko bilkul line 13 ke sath replace karein:
+// Yahan MONGO_URI bilkul sahi tarah define ho chuki hai
 mongoose.connect(MONGO_URI)
-  .then(() => console.log('MongoDB Connected Successfully!'))
+  .then(() => console.log('Local MongoDB Connected Successfully!'))
   .catch(err => console.log('Database Connection Error: ', err));
 
-// Student Schema aur Model (Database Table Structure)
+// Student Schema aur Model
 const StudentSchema = new mongoose.Schema({
     name: { type: String, required: true },
     grade: { type: String, required: true }
@@ -25,7 +24,7 @@ const Student = mongoose.model('Student', StudentSchema);
 
 // API Routes
 
-// 1. Saare students database se lane ke liye (GET)
+// 1. Saare students lane ke liye (GET)
 app.get('/api/students', async (req, res) => {
     try {
         const students = await Student.find();
@@ -35,7 +34,7 @@ app.get('/api/students', async (req, res) => {
     }
 });
 
-// 2. Naya student database mein save karne ke liye (POST)
+// 2. Naya student save karne ke liye (POST)
 app.post('/api/students', async (req, res) => {
     const { name, grade } = req.body;
     if (!name || !grade) {
