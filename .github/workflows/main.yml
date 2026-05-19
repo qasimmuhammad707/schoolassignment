@@ -1,0 +1,43 @@
+name: CI/CD Pipeline for School System
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: SSH into EC2 and Deploy
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ${{ secrets.EC2_USER }}
+        key: ${{ secrets.EC2_SSH_KEY }}
+        script: |
+          # 1. Check if docker and docker-compose exist, if not install them
+          if ! command -v docker &> /dev/null; then
+            sudo apt update && sudo apt install docker.io docker-compose-v2 -y
+            sudo systemctl enable --now docker
+          fi
+
+          # 2. Project folder handle karo
+          if [ -d "schoolassignment" ]; then
+            cd schoolassignment
+            git pull origin main
+          else
+            git clone https://github.com/qasimmuhammad707/schoolassignment.git
+            cd schoolassignment
+          fi
+
+          # 3. Code ke right directory mein jao jahan docker-compose hai
+          cd Desktop/school-system
+
+          # 4. Old containers stop karo aur naye build ke sath up karo
+          sudo docker compose down
+          sudo docker compose up --build -d
