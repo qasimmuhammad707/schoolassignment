@@ -1,21 +1,37 @@
 version: '3.8'
 
 services:
-  # 1. Backend Container (Direct MongoDB Atlas Cloud se connect hoga)
+  # 1. Self-Hosted MongoDB Container
+  app-database:
+    image: mongo:latest
+    container_name: school-db-local
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    restart: always
+
+  # 2. Backend Container (Ab yeh local database se connect hoga)
   app-backend:
     build: ./backend
     container_name: school-backend
     ports:
       - "5000:5000"
     environment:
-      # Hum ne password ki jagah seedha Qasim12345 likh diya hai
-      - MONGO_URI=mongodb+srv://qasimjutt1416_db_user:Qasim12345@schoolcluster.phnwpnu.mongodb.net/schoolDB?retryWrites=true&w=majority&appName=schoolcluster
+      # Iska rasta hum ne local database container ki taraf kar diya hai
+      - MONGO_URI=mongodb://app-database:27017/schoolDB
+    depends_on:
+      - app-database
     restart: always
 
-  # 2. Frontend Container
+  # 3. Frontend Container
   app-frontend:
     build: ./frontend
     container_name: school-frontend
     ports:
       - "8080:80"
     restart: always
+
+# Server par data safe rakhne ke liye volume definition
+volumes:
+  mongo-data:
